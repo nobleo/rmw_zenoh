@@ -4,6 +4,8 @@ on:
   push:
     branches: [ rolling ]
   workflow_dispatch:
+env:
+  RMW_IMPLEMENTATION: rmw_zenoh_cpp
 defaults:
   run:
     shell: bash
@@ -24,9 +26,16 @@ jobs:
     - name: Setup Rust
       uses: dtolnay/rust-toolchain@1.75.0
     - uses: actions/checkout@v2
+    - name: Clone system_tests
+      run: |
+        git clone https://github.com/ros2/system_tests.git
     - name: rosdep
       run: |
         rosdep update
         rosdep install --from-paths . -yir
     - name: build
-      run: /ros_entrypoint.sh colcon build
+      run: /ros_entrypoint.sh colcon build --packages-up-to rmw_zenoh_cpp test_rclcpp
+    - name: test
+      run: |
+        source install/setup.bash
+        /ros_entrypoint.sh launch_test rmw_zenoh_cpp/test/test_rclcpp_launch.py
