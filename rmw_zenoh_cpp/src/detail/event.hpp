@@ -106,7 +106,7 @@ private:
   size_t unread_count_ {0};
 };
 
-/// Base class to be inherited by entities that support events.
+/// A class that manages QoS based events.
 class EventsManager
 {
 public:

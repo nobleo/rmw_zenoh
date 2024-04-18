@@ -32,7 +32,7 @@ void GuardCondition::trigger()
   // be called
   has_triggered_ = true;
 
-  if (condition_variable_ != nullptr) {
+  if (condition_variable_ != nullptr && condition_mutex_ != nullptr) {
     std::lock_guard<std::mutex> cvlk(*condition_mutex_);
     condition_variable_->notify_one();
   }

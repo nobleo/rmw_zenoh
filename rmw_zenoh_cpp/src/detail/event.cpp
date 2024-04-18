@@ -228,7 +228,7 @@ void EventsManager::notify_event(rmw_zenoh_event_type_t event_id)
   }
 
   std::lock_guard<std::mutex> lock(update_event_condition_mutex_);
-  if (event_conditions_[event_id] != nullptr) {
+  if (event_conditions_[event_id] != nullptr && event_condition_mutexes_[event_id] != nullptr) {
     std::lock_guard<std::mutex> cvlk(*event_condition_mutexes_[event_id]);
     event_conditions_[event_id]->notify_one();
   }

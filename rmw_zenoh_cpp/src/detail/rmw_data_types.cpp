@@ -76,7 +76,7 @@ void rmw_subscription_data_t::attach_condition(
 void rmw_subscription_data_t::notify()
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
-  if (condition_ != nullptr) {
+  if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
     std::lock_guard<std::mutex> cvlk(*condition_mutex_);
@@ -192,7 +192,7 @@ std::unique_ptr<ZenohQuery> rmw_service_data_t::pop_next_query()
 void rmw_service_data_t::notify()
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
-  if (condition_ != nullptr) {
+  if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
     std::lock_guard<std::mutex> cvlk(*condition_mutex_);
@@ -297,7 +297,7 @@ std::unique_ptr<ZenohQuery> rmw_service_data_t::take_from_query_map(
 void rmw_client_data_t::notify()
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
-  if (condition_ != nullptr) {
+  if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
     std::lock_guard<std::mutex> cvlk(*condition_mutex_);
