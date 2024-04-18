@@ -33,15 +33,15 @@ void GuardCondition::trigger()
   has_triggered_ = true;
 
   if (condition_variable_ != nullptr && condition_mutex_ != nullptr) {
-    std::lock_guard<std::mutex> cvlk(*condition_mutex_);
+    std::lock_guard<std::recursive_mutex> cvlk(*condition_mutex_);
     condition_variable_->notify_one();
   }
 }
 
 ///==============================================================================
 void GuardCondition::attach_condition(
-  std::mutex * condition_mutex,
-  std::condition_variable * condition_variable)
+  std::recursive_mutex * condition_mutex,
+  std::condition_variable_any * condition_variable)
 {
   std::lock_guard<std::mutex> lock(internal_mutex_);
   condition_mutex_ = condition_mutex;

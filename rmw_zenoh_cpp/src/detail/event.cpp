@@ -184,8 +184,8 @@ void EventsManager::add_new_event(
 ///=============================================================================
 void EventsManager::attach_event_condition(
   rmw_zenoh_event_type_t event_id,
-  std::mutex * condition_mutex,
-  std::condition_variable * condition_variable)
+  std::recursive_mutex * condition_mutex,
+  std::condition_variable_any * condition_variable)
 {
   if (event_id > ZENOH_EVENT_ID_MAX) {
     RMW_SET_ERROR_MSG_WITH_FORMAT_STRING(
@@ -229,7 +229,7 @@ void EventsManager::notify_event(rmw_zenoh_event_type_t event_id)
 
   std::lock_guard<std::mutex> lock(update_event_condition_mutex_);
   if (event_conditions_[event_id] != nullptr && event_condition_mutexes_[event_id] != nullptr) {
-    std::lock_guard<std::mutex> cvlk(*event_condition_mutexes_[event_id]);
+    std::lock_guard<std::recursive_mutex> cvlk(*event_condition_mutexes_[event_id]);
     event_conditions_[event_id]->notify_one();
   }
 }

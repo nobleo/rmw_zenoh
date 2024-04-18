@@ -64,8 +64,8 @@ size_t rmw_publisher_data_t::get_next_sequence_number()
 
 ///=============================================================================
 void rmw_subscription_data_t::attach_condition(
-  std::mutex * condition_mutex,
-  std::condition_variable * condition_variable)
+  std::recursive_mutex * condition_mutex,
+  std::condition_variable_any * condition_variable)
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
   condition_mutex_ = condition_mutex;
@@ -79,7 +79,7 @@ void rmw_subscription_data_t::notify()
   if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
-    std::lock_guard<std::mutex> cvlk(*condition_mutex_);
+    std::lock_guard<std::recursive_mutex> cvlk(*condition_mutex_);
     condition_->notify_one();
   }
 }
@@ -158,8 +158,8 @@ bool rmw_service_data_t::query_queue_is_empty() const
 
 ///=============================================================================
 void rmw_service_data_t::attach_condition(
-  std::mutex * condition_mutex,
-  std::condition_variable * condition_variable)
+  std::recursive_mutex * condition_mutex,
+  std::condition_variable_any * condition_variable)
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
   condition_mutex_ = condition_mutex;
@@ -195,7 +195,7 @@ void rmw_service_data_t::notify()
   if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
-    std::lock_guard<std::mutex> cvlk(*condition_mutex_);
+    std::lock_guard<std::recursive_mutex> cvlk(*condition_mutex_);
     condition_->notify_one();
   }
 }
@@ -300,7 +300,7 @@ void rmw_client_data_t::notify()
   if (condition_ != nullptr && condition_mutex_ != nullptr) {
     // We also need to take the mutex for the condition_variable; see the comment
     // in rmw_wait for more information
-    std::lock_guard<std::mutex> cvlk(*condition_mutex_);
+    std::lock_guard<std::recursive_mutex> cvlk(*condition_mutex_);
     condition_->notify_one();
   }
 }
@@ -338,8 +338,8 @@ bool rmw_client_data_t::reply_queue_is_empty() const
 
 ///=============================================================================
 void rmw_client_data_t::attach_condition(
-  std::mutex * condition_mutex,
-  std::condition_variable * condition_variable)
+  std::recursive_mutex * condition_mutex,
+  std::condition_variable_any * condition_variable)
 {
   std::lock_guard<std::mutex> lock(update_condition_mutex_);
   condition_mutex_ = condition_mutex;

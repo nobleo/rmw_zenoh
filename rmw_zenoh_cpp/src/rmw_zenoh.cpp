@@ -3299,7 +3299,7 @@ rmw_wait(
       }
     }
 
-    std::unique_lock<std::mutex> lock(wait_set_data->condition_mutex);
+    std::unique_lock<std::recursive_mutex> lock(wait_set_data->condition_mutex);
 
     // We have to check the triggered condition *again* under the lock so we
     // don't miss notifications.

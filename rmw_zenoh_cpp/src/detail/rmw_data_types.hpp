@@ -123,8 +123,8 @@ private:
 ///=============================================================================
 struct rmw_wait_set_data_t
 {
-  std::condition_variable condition_variable;
-  std::mutex condition_mutex;
+  std::condition_variable_any condition_variable;
+  std::recursive_mutex condition_mutex;
 
   rmw_context_t * context;
 };
@@ -172,7 +172,9 @@ public:
   MessageTypeSupport * type_support;
   rmw_context_t * context;
 
-  void attach_condition(std::mutex * condition_mutex, std::condition_variable * condition_variable);
+  void attach_condition(
+    std::recursive_mutex * condition_mutex,
+    std::condition_variable_any * condition_variable);
 
   void detach_condition();
 
@@ -191,8 +193,8 @@ private:
 
   void notify();
 
-  std::mutex * condition_mutex_{nullptr};
-  std::condition_variable * condition_{nullptr};
+  std::recursive_mutex * condition_mutex_{nullptr};
+  std::condition_variable_any * condition_{nullptr};
   std::mutex update_condition_mutex_;
 };
 
@@ -244,7 +246,9 @@ public:
 
   bool query_queue_is_empty() const;
 
-  void attach_condition(std::mutex * condition_mutex, std::condition_variable * condition_variable);
+  void attach_condition(
+    std::recursive_mutex * condition_mutex,
+    std::condition_variable_any * condition_variable);
 
   void detach_condition();
 
@@ -270,8 +274,8 @@ private:
   std::unordered_map<size_t, SequenceToQuery> sequence_to_query_map_;
   std::mutex sequence_to_query_map_mutex_;
 
-  std::mutex * condition_mutex_{nullptr};
-  std::condition_variable * condition_{nullptr};
+  std::recursive_mutex * condition_mutex_{nullptr};
+  std::condition_variable_any * condition_{nullptr};
   std::mutex update_condition_mutex_;
 };
 
@@ -322,7 +326,9 @@ public:
 
   bool reply_queue_is_empty() const;
 
-  void attach_condition(std::mutex * condition_mutex, std::condition_variable * condition_variable);
+  void attach_condition(
+    std::recursive_mutex * condition_mutex,
+    std::condition_variable_any * condition_variable);
 
   void detach_condition();
 
@@ -336,8 +342,8 @@ private:
   size_t sequence_number_{1};
   std::mutex sequence_number_mutex_;
 
-  std::mutex * condition_mutex_{nullptr};
-  std::condition_variable * condition_{nullptr};
+  std::recursive_mutex * condition_mutex_{nullptr};
+  std::condition_variable_any * condition_{nullptr};
   std::mutex update_condition_mutex_;
 
   std::deque<std::unique_ptr<ZenohReply>> reply_queue_;

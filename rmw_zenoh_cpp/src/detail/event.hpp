@@ -138,8 +138,8 @@ public:
   /// @param condition_variable to attach.
   void attach_event_condition(
     rmw_zenoh_event_type_t event_id,
-    std::mutex * condition_mutex,
-    std::condition_variable * condition_variable);
+    std::recursive_mutex * condition_mutex,
+    std::condition_variable_any * condition_variable);
 
   /// @brief Detach the condition variable provided by rmw_wait.
   void detach_event_condition(rmw_zenoh_event_type_t event_id);
@@ -156,9 +156,9 @@ private:
   mutable std::mutex event_mutex_;
   /// Mutex to lock for event_condition.
   mutable std::mutex update_event_condition_mutex_;
-  std::mutex * event_condition_mutexes_[ZENOH_EVENT_ID_MAX + 1]{nullptr};
+  std::recursive_mutex * event_condition_mutexes_[ZENOH_EVENT_ID_MAX + 1]{nullptr};
   /// Condition variable to attach for event notifications.
-  std::condition_variable * event_conditions_[ZENOH_EVENT_ID_MAX + 1]{nullptr};
+  std::condition_variable_any * event_conditions_[ZENOH_EVENT_ID_MAX + 1]{nullptr};
   /// User callback that can be set via data_callback_mgr.set_callback().
   rmw_event_callback_t callback_ {nullptr};
   /// User data that should be passed to the user callback.
