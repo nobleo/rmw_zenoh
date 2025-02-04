@@ -2,8 +2,8 @@
 Changelog for package rmw_zenoh_cpp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.1 (2025-02-04)
+------------------
 * Bump Zenoh to commit id e4ea6f0 (1.2.0 + few commits) (`#448 <https://github.com/ros2/rmw_zenoh/issues/448>`_)
 * Inform users that peers will not discover and communicate with one another until the router is started (`#444 <https://github.com/ros2/rmw_zenoh/issues/444>`_)
 * Clear the error after rmw_serialized_message_resize() (`#436 <https://github.com/ros2/rmw_zenoh/issues/436>`_)
